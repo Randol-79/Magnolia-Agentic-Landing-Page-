@@ -311,19 +311,6 @@
     <div id="sticky-cta" class="md:hidden fixed bottom-0 left-0 right-0 bg-gray-900/90 backdrop-blur-md p-4 border-t border-gray-700 z-40">
         <button class="modal-trigger neo-cta w-full bg-primary-500 hover:bg-primary-600 text-white py-3 px-6 rounded-full font-semibold text-lg">Get Free AI Plan</button>
     </div>
-
-    <!-- Chatbot Widget -->
-    <div class="fixed bottom-5 right-5 z-40">
-        <div id="chat-bubble" class="">
-            <button class="neo-cta bg-primary-500 hover:bg-primary-600 text-white h-16 w-16 rounded-full flex items-center justify-center shadow-lg focus-ring" aria-label="Open chatbot">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-            </button>
-        </div>
-        <div id="chat-iframe-container" class="hidden w-[calc(100vw-40px)] h-[70vh] sm:w-96 sm:h-[600px] bg-gray-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col neo-surface">
-            <header class="p-4 bg-gray-900 flex justify-between items-center"><h3 class="text-white font-semibold">AI Assistant</h3><button id="close-chat" class="text-gray-400 hover:text-white focus-ring rounded-full p-1" aria-label="Close chatbot"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button></header>
-            <div class="flex-grow flex items-center justify-center"><p class="text-gray-400">Chatbot would load here.</p></div>
-        </div>
-    </div>
     
     <!-- Consultation Modal -->
     <div id="consultation-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -489,19 +476,6 @@
                 submitButton.textContent = 'Get My Free Plan';
             }
         });
-
-        // --- Chatbot ---
-        const chatBubble = document.getElementById('chat-bubble');
-        const chatContainer = document.getElementById('chat-iframe-container');
-        const closeChatButton = document.getElementById('close-chat');
-
-        const toggleChat = () => {
-            chatBubble.classList.toggle('hidden');
-            chatContainer.classList.toggle('hidden');
-        };
-
-        chatBubble.addEventListener('click', toggleChat);
-        closeChatButton.addEventListener('click', toggleChat);
         
         // --- Lazy Load Sections ---
         const sections = document.querySelectorAll('.fade-in-section');
@@ -519,7 +493,9 @@
         });
     });
     </script>
+    <script>
+(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="BcoZ5tUDywN_6BEC5Xryj";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+</script>
 </body>
 </html>
-
 
