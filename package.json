@@ -1,0 +1,13 @@
+{
+  "name": "magnolia-ai-landing-page",
+  "version": "1.0.0",
+  "description": "Static landing page for Magnolia AI Solutions.",
+  "private": true,
+  "scripts": {
+    "start": "serve",
+    "dev": "serve"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}

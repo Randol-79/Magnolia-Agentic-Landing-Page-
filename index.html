@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magnolia AI Solutions | Custom AI Operating Systems</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Styles from globals.css */
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* gray-900 */
+        }
+        
+        /* Neuromorphic design tokens */
+        .neo-surface {
+            background: #111418;
+            border-radius: 1.25rem;
+            box-shadow: 12px 12px 24px rgba(0, 0, 0, .55), -8px -8px 18px rgba(255, 255, 255, .04);
+        }
+        .neo-inset {
+            box-shadow: inset 8px 8px 16px rgba(0, 0, 0, .55), inset -6px -6px 14px rgba(255, 255, 255, .04);
+        }
+        .neo-cta {
+            border-radius: 9999px;
+            box-shadow: 0 12px 24px rgba(5, 202, 167, .18), 0 2px 0 rgba(0, 0, 0, .3) inset;
+            transition: all 0.2s ease;
+        }
+        .neo-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 28px rgba(5, 202, 167, .25), 0 2px 0 rgba(0, 0, 0, .35) inset;
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .neo-cta:hover { transform: none; }
+        }
+
+        /* Focus styles for accessibility */
+        .focus-ring {
+            @apply focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-gray-900;
+        }
+        
+        /* Custom Slider styles */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            width: 100%;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: linear-gradient(to right, #14b8a6 var(--value-percent, 50%), #374151 var(--value-percent, 50%));
+            height: 0.75rem;
+            border-radius: 0.5rem;
+        }
+        input[type="range"]::-moz-range-track {
+            background: linear-gradient(to right, #14b8a6 var(--value-percent, 50%), #374151 var(--value-percent, 50%));
+            height: 0.75rem;
+            border-radius: 0.5rem;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -4px;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #14b8a6;
+            border: 3px solid #f0fdfa;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        input[type="range"]::-moz-range-thumb {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #14b8a6;
+            border: 3px solid #f0fdfa;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+
+        /* Animation for lazy-loaded sections */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    <script>
+        // Custom Tailwind CSS Configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a' },
+                        gray: { 50: '#f9fafb', 100: '#f3f4f6', 200: '#e5e7eb', 300: '#d1d5db', 400: '#9ca3af', 500: '#6b7280', 600: '#4b5563', 700: '#374151', 800: '#1f2937', 900: '#111827' },
+                        dark: { 50: '#18181b', 100: '#27272a', 200: '#3f3f46', 300: '#52525b', 400: '#71717a', 500: '#a1a1aa', 600: '#d4d4d8', 700: '#e4e4e7', 800: '#f4f4f5', 900: '#fafafa' },
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-900 text-white antialiased">
+    
+    <!-- Navigation -->
+    <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent" role="navigation" aria-label="Main navigation">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center space-x-3 text-xl font-bold text-white hover:text-primary-400 transition-colors focus-ring rounded-md px-2 py-1" aria-label="Return to homepage">
+                        <img src="https://pub-23f7e1f517734fc09a8400d484.r2.dev/Magnolia%20AI%20Logo%20Clean.png" alt="Magnolia AI Solutions Logo" class="h-10 w-auto">
+                        <span>Magnolia AI Solutions</span>
+                    </a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#features" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors focus-ring">Features</a>
+                        <a href="#roi" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors focus-ring">ROI Calculator</a>
+                        <a href="#testimonials" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors focus-ring">Success Stories</a>
+                        <button class="modal-trigger neo-cta bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all duration-200 focus-ring" aria-label="Get your free AI growth plan">Get Free Plan</button>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus-ring" aria-expanded="false" aria-label="Open main menu">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-900/95 backdrop-blur-md">
+                <a href="#features" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Features</a>
+                <a href="#roi" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">ROI Calculator</a>
+                <a href="#testimonials" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Success Stories</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20" aria-labelledby="hero-headline">
+            <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0">
+                <source src="https://pub-23f7e1f517734fc09a8400d484.r2.dev/Light-Speed.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="absolute inset-0 bg-gray-900/60 z-1"></div>
+            
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="mb-8">
+                    <p class="inline-flex items-center px-6 py-3 neo-surface text-sm text-gray-300 rounded-full">
+                        <span class="w-2 h-2 bg-green-400 rounded-full mr-3 animate-pulse"></span>
+                        Join 100+ SMB leaders using custom AI OS playbooks.
+                    </p>
+                </div>
+                <h1 id="hero-headline" class="text-4xl sm:text-5xl lg:text-6xl font-black mb-8 leading-tight">
+                    <span class="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+                        Your AI Operating System. Built Around Your Business—Not the Other Way Around.
+                    </span>
+                </h1>
+                <p class="text-xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed">
+                    Unify tools, automate the busywork, and see live insights in one screen. Teams reclaim 10–20 hrs/week within 30 days—guaranteed.
+                </p>
+                <div class="mb-8">
+                    <button class="modal-trigger neo-cta bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white text-xl px-12 py-6 rounded-full font-semibold transition-all duration-300 focus-ring shadow-2xl" aria-describedby="cta-description">
+                        Get My Free AI Growth Plan
+                    </button>
+                    <p id="cta-description" class="text-gray-400 mt-4 text-lg">No pitch. 20-min audit. ROI forecast included.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Integrations Row Section -->
+        <section id="integrations" class="py-16 bg-gray-900 fade-in-section">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-center text-2xl font-semibold text-gray-400 mb-10">Integrates With Your Favorite Tools</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
+                    <div title="QuickBooks" class="flex justify-center h-12 grayscale hover:grayscale-0 transition-all duration-300"> <img src="https://pub-23f7e1f517734fc09a8400d484.r2.dev/quickbooks-2.svg" alt="QuickBooks Logo" class="object-contain h-full w-auto"/> </div>
+                    <div title="HubSpot" class="flex justify-center h-12 grayscale hover:grayscale-0 transition-all duration-300"> <img src="https://pub-23f7e1f517734fc09a8400d484.r2.dev/hubspot.svg" alt="HubSpot Logo" class="object-contain h-full w-auto"/> </div>
+                    <div title="GitHub" class="flex justify-center h-12 grayscale hover:grayscale-0 transition-all duration-300"> <img src="https://pub-23f7e1f517734fc09a8400d484.r2.dev/github-icon-2.svg" alt="GitHub Logo" class="object-contain h-full w-auto"/> </div>
+                    <div title="Slack" class="flex justify-center h-12 grayscale hover:grayscale-0 transition-all duration-300"> <img src="https://pub-23f7e1f517734fc09a8400d484.r2.dev/slack-new-logo.svg" alt="Slack Logo" class="object-contain h-full w-auto"/> </div>
+                    <div title="Google Workspace" class="flex justify-center h-12 grayscale hover:grayscale-0 transition-all duration-300"> <img src="https://pub-23f7e1f517734fc09a8400d484.r2.dev/google-1-1.svg" alt="Google Logo" class="object-contain h-full w-auto"/> </div>
+                    <div title="Shopify" class="flex justify-center h-12 grayscale hover:grayscale-0 transition-all duration-300"> <img src="https://cdn.worldvectorlogo.com/logos/shopify.svg" alt="Shopify Logo" class="object-contain h-full w-auto"/> </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Objections Section -->
+        <section id="features" class="py-20 bg-gray-900 fade-in-section">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">Designed for Your Workflow, Not Against It</h2>
+                    <p class="text-xl text-gray-400">We built our AI OS to enhance your existing tools and processes, eliminating common adoption hurdles.</p>
+                </div>
+                <div class="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    <div class="neo-surface p-8">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-gray-800 neo-inset mb-6"><span class="text-3xl">🔌</span></div>
+                        <h3 class="text-xl font-bold text-white mb-3">Plug-and-Play Integrations</h3>
+                        <p class="text-gray-400 leading-relaxed">Connects with QuickBooks, HubSpot, Asana, and 200+ tools you already use.</p>
+                    </div>
+                    <div class="neo-surface p-8">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-gray-800 neo-inset mb-6"><span class="text-3xl">🔧</span></div>
+                        <h3 class="text-xl font-bold text-white mb-3">No Rip-and-Replace</h3>
+                        <p class="text-gray-400 leading-relaxed">Keep your existing workflows. We enhance what works, fix what doesn't.</p>
+                    </div>
+                    <div class="neo-surface p-8">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-gray-800 neo-inset mb-6"><span class="text-3xl">🎯</span></div>
+                        <h3 class="text-xl font-bold text-white mb-3">Success Plan + Training</h3>
+                        <p class="text-gray-400 leading-relaxed">Dedicated AI specialist, training, and 30-day momentum guarantee.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROI Calculator Section -->
+        <section id="roi" class="py-20 bg-gray-800 fade-in-section">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">Calculate Your ROI</h2>
+                    <p class="text-xl text-gray-400">See exactly how much time and money you'll save with AI automation.</p>
+                </div>
+                <div class="max-w-4xl mx-auto mt-16">
+                    <div class="neo-surface bg-gray-900 rounded-3xl p-8 lg:p-12">
+                        <div class="grid lg:grid-cols-2 gap-12">
+                            <div class="space-y-8">
+                                <div>
+                                    <label for="team-size" class="block text-lg font-medium text-white mb-4">Team Size: <span id="team-size-value" class="text-primary-400">10 people</span></label>
+                                    <input id="team-size" type="range" min="1" max="50" value="10" class="w-full">
+                                </div>
+                                <div>
+                                    <label for="hourly-rate" class="block text-lg font-medium text-white mb-4">Avg. Hourly Rate: <span id="hourly-rate-value" class="text-primary-400">$50</span></label>
+                                    <input id="hourly-rate" type="range" min="20" max="200" value="50" step="5" class="w-full">
+                                </div>
+                                <div>
+                                    <label for="hours-saved" class="block text-lg font-medium text-white mb-4">Hours Saved Per Person/Week: <span id="hours-saved-value" class="text-primary-400">5h</span></label>
+                                    <input id="hours-saved" type="range" min="1" max="20" value="5" class="w-full">
+                                </div>
+                            </div>
+                            <div class="neo-inset bg-gray-800 rounded-2xl p-8">
+                                <h3 class="text-2xl font-bold text-white mb-6">Your Estimated Savings</h3>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center py-3 border-b border-gray-700"><span class="text-gray-300">Monthly:</span><span id="monthly-savings" class="text-2xl font-bold text-green-400">$10,825</span></div>
+                                    <div class="flex justify-between items-center py-3 border-b border-gray-700"><span class="text-gray-300">Annually:</span><span id="annual-savings" class="text-2xl font-bold text-green-400">$129,900</span></div>
+                                    <div class="flex justify-between items-center py-3 border-b border-gray-700"><span class="text-gray-300">Payback Period:</span><span id="payback-period" class="text-2xl font-bold text-primary-400">1 month</span></div>
+                                    <div class="flex justify-between items-center py-3"><span class="text-gray-300">1-Year ROI:</span><span id="roi-value" class="text-3xl font-bold text-yellow-400">2065%</span></div>
+                                </div>
+                                <button class="modal-trigger neo-cta w-full mt-8 bg-primary-500 hover:bg-primary-600 text-white py-4 rounded-full text-lg font-semibold transition-all duration-200 focus-ring">Email Me This Plan</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="py-20 bg-gray-900 fade-in-section">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                 <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">Trusted by High-Growth Teams</h2>
+                    <p class="text-xl text-gray-400">Hear how leaders are saving time, cutting costs, and scaling faster with their custom AI OS.</p>
+                </div>
+                <div class="mt-16 grid gap-8 lg:grid-cols-3">
+                    <div class="neo-surface p-8 flex flex-col h-full">
+                        <p class="flex-grow mb-6 text-gray-300 text-lg italic">"Cut our reporting time by 75% and eliminated 3 manual processes. ROI within 6 weeks."</p>
+                        <div class="flex items-center"><img src="https://placehold.co/56x56/718096/e2e8f0?text=SM" alt="Sarah Mitchell" class="h-14 w-14 rounded-full object-cover mr-4"><div><p class="font-bold text-white">Sarah Mitchell</p><p class="text-gray-400">Operations Director</p></div></div>
+                    </div>
+                    <div class="neo-surface p-8 flex flex-col h-full">
+                        <p class="flex-grow mb-6 text-gray-300 text-lg italic">"Our team saves 15 hours per week on administrative tasks. It's like having an extra employee."</p>
+                        <div class="flex items-center"><img src="https://placehold.co/56x56/718096/e2e8f0?text=MR" alt="Marcus Rodriguez" class="h-14 w-14 rounded-full object-cover mr-4"><div><p class="font-bold text-white">Marcus Rodriguez</p><p class="text-gray-400">CEO</p></div></div>
+                    </div>
+                    <div class="neo-surface p-8 flex flex-col h-full">
+                        <p class="flex-grow mb-6 text-gray-300 text-lg italic">"The AI OS paid for itself in month one. Data flows seamlessly between all our systems now."</p>
+                        <div class="flex items-center"><img src="https://placehold.co/56x56/718096/e2e8f0?text=JP" alt="Jennifer Park" class="h-14 w-14 rounded-full object-cover mr-4"><div><p class="font-bold text-white">Jennifer Park</p><p class="text-gray-400">COO</p></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 border-t border-gray-700">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center text-gray-400">
+            <p>&copy; 2025 Magnolia AI Solutions. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Sticky Mobile CTA -->
+    <div id="sticky-cta" class="md:hidden fixed bottom-0 left-0 right-0 bg-gray-900/90 backdrop-blur-md p-4 border-t border-gray-700 z-40">
+        <button class="modal-trigger neo-cta w-full bg-primary-500 hover:bg-primary-600 text-white py-3 px-6 rounded-full font-semibold text-lg">Get Free AI Plan</button>
+    </div>
+
+    <!-- Chatbot Widget -->
+    <div class="fixed bottom-5 right-5 z-40">
+        <div id="chat-bubble" class="">
+            <button class="neo-cta bg-primary-500 hover:bg-primary-600 text-white h-16 w-16 rounded-full flex items-center justify-center shadow-lg focus-ring" aria-label="Open chatbot">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+            </button>
+        </div>
+        <div id="chat-iframe-container" class="hidden w-[calc(100vw-40px)] h-[70vh] sm:w-96 sm:h-[600px] bg-gray-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col neo-surface">
+            <header class="p-4 bg-gray-900 flex justify-between items-center"><h3 class="text-white font-semibold">AI Assistant</h3><button id="close-chat" class="text-gray-400 hover:text-white focus-ring rounded-full p-1" aria-label="Close chatbot"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button></header>
+            <div class="flex-grow flex items-center justify-center"><p class="text-gray-400">Chatbot would load here.</p></div>
+        </div>
+    </div>
+    
+    <!-- Consultation Modal -->
+    <div id="consultation-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div id="modal-backdrop" class="fixed inset-0 bg-black/75"></div>
+        <div class="flex min-h-full items-center justify-center p-4">
+            <div class="neo-surface bg-gray-800 relative w-full max-w-lg transform rounded-2xl p-8 shadow-2xl transition-all">
+                 <button id="modal-close-button" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-700 transition-colors focus-ring" aria-label="Close dialog">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+                <div id="modal-form-content">
+                    <h2 id="modal-title" class="text-2xl font-bold text-white mb-6">Get Your Free AI Growth Plan</h2>
+                    <form id="consultation-form" class="space-y-4" novalidate>
+                        <div><label for="name" class="block text-sm font-medium text-gray-300 mb-2">Name *</label><input id="name" type="text" required class="neo-inset w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400"></div>
+                        <div><label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email *</label><input id="email" type="email" required class="neo-inset w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400"></div>
+                        <div><label for="business" class="block text-sm font-medium text-gray-300 mb-2">Business Name *</label><input id="business" type="text" required class="neo-inset w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400"></div>
+                        <div><label for="challenge" class="block text-sm font-medium text-gray-300 mb-2">Biggest Challenge</label><textarea id="challenge" rows="3" placeholder="What's your biggest operational challenge?" class="neo-inset w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400"></textarea></div>
+                        <div id="form-error" class="text-red-400 text-sm hidden"></div>
+                        <button type="submit" class="neo-cta w-full bg-primary-500 hover:bg-primary-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-3 rounded-lg font-semibold transition-colors focus-ring">Get My Free Plan</button>
+                    </form>
+                </div>
+                <div id="modal-success-content" class="text-center hidden">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                        <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mb-4">Thank You!</h2>
+                    <p class="text-gray-300 mb-6">We've received your request. Our AI specialist will contact you within 24 hours.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Navigation ---
+        const nav = document.getElementById('main-nav');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                nav.classList.add('bg-gray-900/95', 'backdrop-blur-md', 'shadow-lg');
+                nav.classList.remove('bg-transparent');
+            } else {
+                nav.classList.remove('bg-gray-900/95', 'backdrop-blur-md', 'shadow-lg');
+                nav.classList.add('bg-transparent');
+            }
+        });
+
+        mobileMenuButton.addEventListener('click', () => {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // --- ROI Calculator ---
+        const teamSizeSlider = document.getElementById('team-size');
+        const hourlyRateSlider = document.getElementById('hourly-rate');
+        const hoursSavedSlider = document.getElementById('hours-saved');
+        const sliders = [teamSizeSlider, hourlyRateSlider, hoursSavedSlider];
+
+        function updateRoi() {
+            if (!teamSizeSlider) return;
+            const teamSize = parseInt(teamSizeSlider.value);
+            const hourlyRate = parseInt(hourlyRateSlider.value);
+            const hoursSaved = parseInt(hoursSavedSlider.value);
+
+            document.getElementById('team-size-value').textContent = `${teamSize} people`;
+            document.getElementById('hourly-rate-value').textContent = `$${hourlyRate}`;
+            document.getElementById('hours-saved-value').textContent = `${hoursSaved}h`;
+            
+            const weeklySavings = teamSize * hourlyRate * hoursSaved;
+            const monthlySavings = weeklySavings * 4.33;
+            const annualSavings = monthlySavings * 12;
+            const monthlyAICost = 500;
+            
+            let paybackMonths = Math.ceil(monthlyAICost / monthlySavings);
+            if (paybackMonths <= 0 || !isFinite(paybackMonths)) paybackMonths = 1;
+
+            const roi = Math.round(((annualSavings - (monthlyAICost * 12)) / (monthlyAICost * 12)) * 100);
+
+            document.getElementById('monthly-savings').textContent = `$${Math.round(monthlySavings).toLocaleString()}`;
+            document.getElementById('annual-savings').textContent = `$${Math.round(annualSavings).toLocaleString()}`;
+            document.getElementById('payback-period').textContent = `${paybackMonths} month${paybackMonths > 1 ? 's' : ''}`;
+            document.getElementById('roi-value').textContent = `${roi.toLocaleString()}%`;
+        }
+        
+        sliders.forEach(slider => {
+            if (!slider) return;
+            slider.addEventListener('input', () => {
+                const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+                slider.style.setProperty('--value-percent', `${value}%`);
+                updateRoi();
+            });
+            const initialValue = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+            slider.style.setProperty('--value-percent', `${initialValue}%`);
+        });
+
+        // --- Consultation Modal & Form Submission ---
+        const modal = document.getElementById('consultation-modal');
+        const modalTriggers = document.querySelectorAll('.modal-trigger');
+        const modalCloseButtons = [ document.getElementById('modal-close-button'), document.getElementById('modal-backdrop') ];
+        const form = document.getElementById('consultation-form');
+        const formContent = document.getElementById('modal-form-content');
+        const successContent = document.getElementById('modal-success-content');
+
+        const openModal = () => {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        };
+        const closeModal = () => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+            // Reset form for next time
+            setTimeout(() => {
+                formContent.classList.remove('hidden');
+                successContent.classList.add('hidden');
+                form.reset();
+            }, 300);
+        };
+
+        modalTriggers.forEach(trigger => trigger.addEventListener('click', openModal));
+        modalCloseButtons.forEach(button => button.addEventListener('click', closeModal));
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitButton = form.querySelector('button[type="submit"]');
+            const errorDiv = document.getElementById('form-error');
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const business = document.getElementById('business').value;
+            const challenge = document.getElementById('challenge').value;
+
+            if (!name || !email || !business) {
+                errorDiv.textContent = 'Please fill out all required fields.';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            errorDiv.classList.add('hidden');
+
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+            
+            const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbzQv75XwW_tbboGB96XoE92lWcXluMDzqbAc_ylPjSbTWm3FAiN7qi39uwAeMfO0gr7/exec';
+            const payload = { name, email, business, challenge };
+
+            try {
+                await fetch(appsScriptUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'no-cors' // Use no-cors as Apps Script redirects, which can cause CORS issues
+                });
+                
+                formContent.classList.add('hidden');
+                successContent.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Form submission error:', error);
+                errorDiv.textContent = 'Submission failed. Please check your connection and try again.';
+                errorDiv.classList.remove('hidden');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Get My Free Plan';
+            }
+        });
+
+        // --- Chatbot ---
+        const chatBubble = document.getElementById('chat-bubble');
+        const chatContainer = document.getElementById('chat-iframe-container');
+        const closeChatButton = document.getElementById('close-chat');
+
+        const toggleChat = () => {
+            chatBubble.classList.toggle('hidden');
+            chatContainer.classList.toggle('hidden');
+        };
+
+        chatBubble.addEventListener('click', toggleChat);
+        closeChatButton.addEventListener('click', toggleChat);
+        
+        // --- Lazy Load Sections ---
+        const sections = document.querySelectorAll('.fade-in-section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    });
+    </script>
+</body>
+</html>
+
